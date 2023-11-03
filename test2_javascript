@@ -1,0 +1,140 @@
+Here's an example of how you can achieve this using jQuery for the frontend and mock requests. You'll need to replace the mock requests with actual backend calls when implementing this in a real application.
+
+html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CRUD Table</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    button {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Datetime</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- You can populate this section with data from the backend -->
+    </tbody>
+  </table>
+
+  <button id="addEntry">Add New Entry</button>
+
+  <script>
+    // Mock data
+    var mockData = [
+      { id: 1, name: "John Doe", datetime: "2023-11-03 12:00:00" },
+      { id: 2, name: "Alice Smith", datetime: "2023-11-03 14:30:00" }
+    ];
+
+    // Function to populate the table with data
+    function populateTable(data) {
+      var tbody = $('tbody');
+      tbody.empty();
+      data.forEach(function(entry) {
+        var row = $('<tr>');
+        row.append($('<td>').text(entry.id));
+        var nameCell = $('<td>').text(entry.name);
+        nameCell.attr('contenteditable', 'false');
+        row.append(nameCell);
+        row.append($('<td>').text(entry.datetime));
+        var actionsCell = $('<td>');
+        var editButton = $('<button>').text('Edit');
+        var deleteButton = $('<button>').text('Delete');
+        actionsCell.append(editButton);
+        actionsCell.append(deleteButton);
+        row.append(actionsCell);
+        tbody.append(row);
+
+        // Edit button click event
+        editButton.click(function() {
+          nameCell.attr('contenteditable', 'true');
+          editButton.text('Save');
+          editButton.off('click');
+
+          // Save button click event
+          var saveButton = $('<button>').text('Save');
+          actionsCell.append(saveButton);
+          saveButton.click(function() {
+            var newName = nameCell.text();
+            saveButton.text('Edit');
+            nameCell.attr('contenteditable', 'false');
+
+            // Mock request to update data on the backend
+            // Replace this with an actual backend call
+            console.log('Update data on the backend: ID=' + entry.id + ', Name=' + newName);
+          });
+        });
+
+        // Delete button click event
+        deleteButton.click(function() {
+          // Mock request to delete data on the backend
+          // Replace this with an actual backend call
+          console.log('Delete data on the backend: ID=' + entry.id);
+          row.remove(); // Remove the row on success
+        });
+      });
+    }
+
+    // Mock initial data population
+    populateTable(mockData);
+
+    // Add Entry button click event
+    $('#addEntry').click(function() {
+      // Display input fields and Send button
+      var newRow = $('<tr>');
+      newRow.append($('<td>'); // ID will be generated on the backend
+      var nameInput = $('<td>').append('<input type="text" id="newName" placeholder="Name">');
+      var datetimeInput = $('<td>').append('<input type="text" id="newDatetime" placeholder="Datetime">');
+      var sendButton = $('<button>').text('Send');
+      newRow.append(nameInput);
+      newRow.append(datetimeInput);
+      newRow.append(sendButton);
+      $('tbody').append(newRow);
+
+      // Send button click event
+      sendButton.click(function() {
+        var newName = $('#newName').val();
+        var newDatetime = $('#newDatetime').val();
+
+        // Mock request to create a new entry on the backend
+        // Replace this with an actual backend call
+        console.log('Create new entry on the backend: Name=' + newName + ', Datetime=' + newDatetime);
+
+        // On success, add the new entry to the table
+        var newEntry = { id: mockData.length + 1, name: newName, datetime: newDatetime };
+        mockData.push(newEntry);
+        populateTable(mockData);
+
+        // Clear the input fields
+        $('#newName').val('');
+        $('#newDatetime').val('');
+      });
+    });
+  </script>
+</body>
+</html>
+
+
+This code provides the functionality you described, including adding, editing, and deleting entries. It uses mock data and requests for demonstration purposes. You should replace the mock requests with actual backend communication in a production environment.
