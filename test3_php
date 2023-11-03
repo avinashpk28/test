@@ -1,0 +1,82 @@
+
+final class TableCreator
+{
+  
+    public function __construct()
+    {
+        $this->create();
+        $this->fill();
+    }
+
+   
+    private function create()
+    {
+        $sql = "
+            CREATE TABLE IF NOT EXISTS Test (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                script_name VARCHAR(25) NOT NULL,
+                start_time DATETIME,
+                end_time DATETIME,
+                result ENUM('normal', 'illegal', 'failed', 'success') NOT NULL
+            )
+        ";
+
+        $conn = new mysqli("hostname", "username", "password", "database_name");
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        $conn->query($sql);
+        $conn->close();
+    }
+
+  
+    private function fill()
+    {
+        $data = [
+            ['Script 1', '2023-11-03 12:00:00', '2023-11-03 14:00:00', 'normal'],
+            ['Script 2', '2023-11-03 13:00:00', '2023-11-03 15:00:00', 'success'],
+        
+        ];
+
+        $conn = new mysqli("hostname", "username", "password", "database_name");
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        foreach ($data as $entry) {
+            $scriptName = $entry[0];
+            $startTime = $entry[1];
+            $endTime = $entry[2];
+            $result = $entry[3];
+
+            $sql = "INSERT INTO Test (script_name, start_time, end_time, result) 
+                    VALUES ('$scriptName', '$startTime', '$endTime', '$result')";
+            $conn->query($sql);
+        }
+
+        $conn->close();
+    }
+
+    public function get($result)
+    {
+        $conn = new mysqli("hostname", "username", "password", "database_name");
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        $sql = "SELECT * FROM Test WHERE result = '$result'";
+        $result = $conn->query($sql);
+
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+
+        $conn->close();
+
+        return $data;
+    }
+}
+
+$creator = new TableCreator();
+$normalAndSuccessData = $creator->get('normal');
