@@ -1,0 +1,9 @@
+<?php
+
+$pattern = "/datafiles/[a-zA-Z0-9]*.ixt";
+$files_name = glob($pattern);
+sort($files_name);
+foreach ($files_name as $file) {
+    echo $file . "\n";
+}
+?>
