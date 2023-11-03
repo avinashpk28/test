@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Button Swapping</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    .button {
+      width: 100px;
+      height: 40px;
+      margin: 5px;
+      text-align: center;
+      background-color: lightblue;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="button" id="button1">1</div>
+  <div class="button" id="button2">2</div>
+  <div class="button" id="button3">3</div>
+
+  <script>
+    $(document).ready(function() {
+      $('.button').click(function() {
+        var clickedIndex = $('.button').index(this);
+        var aboveIndex = clickedIndex - 1;
+        var belowIndex = clickedIndex + 1;
+        
+        if (aboveIndex >= 0) {
+          var $aboveButton = $('.button').eq(aboveIndex);
+          $(this).insertBefore($aboveButton);
+        }
+        else if (belowIndex < $('.button').length) {
+          var $belowButton = $('.button').eq(belowIndex);
+          $(this).insertAfter($belowButton);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
